@@ -6,18 +6,18 @@ import csv
 import mysql.connector
 import sys
 
-try:
-    mydb = mysql.connector.connect(
-    host="maximecharriere.ch",
-    user="root",
-    password="##########",
-    database="crypto"
-    )
-except mysql.connector.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
-    sys.exit(1)
+# try:
+#     mydb = mysql.connector.connect(
+#     host="maximecharriere.ch",
+#     user="root",
+#     password="##########",
+#     database="crypto"
+#     )
+# except mysql.connector.Error as e:
+#     print(f"Error connecting to MariaDB Platform: {e}")
+#     sys.exit(1)
 
-mycursor = mydb.cursor()
+# mycursor = mydb.cursor()
 
 # CHROME_PATH = "C:/dev/chromedriver_win32/chromedriver.exe"
 CHROMEDRIVER_PATH = "C:/dev/chromedriver_win32/chromedriver.exe"
@@ -26,12 +26,14 @@ URL = "https://www.binance.com/en/activity/bitcoin-button-game"
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
+chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 # chrome_options.binary_location = CHROME_PATH
 
 driver = webdriver.Chrome(
     executable_path=CHROMEDRIVER_PATH,
-    chrome_options=chrome_options)
+    options=chrome_options)
+# driver = webdriver.Remote("http://localhost:4444/wd/hub", options=chrome_options)
 
 driver.get(URL)
 
@@ -56,12 +58,12 @@ with open('BinanceButtonStats.csv', 'a', newline='') as csvfile:
             totalParticipants = int(matches[1].text.replace(",",""))
             csvwriter.writerow([start_m,countdown_min,totalParticipants])
             print(f"Row writed: {start_m},{countdown_min},{totalParticipants}")
-            try:
-                mycursor.execute(
-                "INSERT INTO binance_btn_stats (timestamp,participants_tot,countdown_min) VALUES (?, ?, ?)", 
-                (start_m,totalParticipants,countdown_min))
-            except mysql.connector.Error as e:
-                print(f"Error adding data to MariaDB Platform: {e}")
+            # try:
+            #     mycursor.execute(
+            #     "INSERT INTO binance_btn_stats (timestamp,participants_tot,countdown_min) VALUES (?, ?, ?)", 
+            #     (start_m,totalParticipants,countdown_min))
+            # except mysql.connector.Error as e:
+            #     print(f"Error adding data to MariaDB Platform: {e}")
 
         to_sleep = 1.0+start_s-time()
         sleep(to_sleep) if to_sleep>=0 else print("PROCESS TIME > 1s !!")
