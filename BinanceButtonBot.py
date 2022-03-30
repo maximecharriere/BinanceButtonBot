@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from time import time, sleep
 import mysql.connector
+import json 
 
 mysql_insert_query = """
 INSERT INTO `binance_btn_stats` (`timestamp`, `participants_tot`, `countdown_min`) 
@@ -10,12 +11,15 @@ VALUES
 (FROM_UNIXTIME(%s), %s, %s);
 """
 
+with open('db_login.json') as json_file:
+    login = json.load(json_file)
+
 try:
     mydb = mysql.connector.connect(
-        host="",
-        user="",
-        password="",
-        database="")
+        host     = login["host"],
+        user     = login["user"],
+        password = login["password"],
+        database = login["database"])
     mycursor = mydb.cursor()
 except mysql.connector.Error as e:
     print(f"Failed to connect to database: {e}")
