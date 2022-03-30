@@ -42,7 +42,7 @@ driver = webdriver.Chrome(
 driver.get(URL)
 
 countdown = []
-start_m = 0
+start_m = time()
 
 try:
     while True:
