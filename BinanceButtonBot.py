@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from time import time, sleep
-import csv
 import mysql.connector
 
 mysql_insert_query = """
@@ -18,7 +17,6 @@ try:
         password="",
         database="")
     mycursor = mydb.cursor()
-
 except mysql.connector.Error as e:
     print(f"Failed to connect to database: {e}")
     exit()
@@ -41,9 +39,8 @@ driver.get(URL)
 
 countdown = []
 start_m = 0
-with open('BinanceButtonStats.csv', 'a', newline='') as csvfile:
-    csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
+try:
     while True:
         start_s = time()
         content = driver.page_source
@@ -58,16 +55,18 @@ with open('BinanceButtonStats.csv', 'a', newline='') as csvfile:
             countdown.clear()
             matches =  soup.findAll('div', attrs={'class':'css-th68ec'})
             participants = int(matches[1].text.replace(",",""))
-            csvwriter.writerow([start_m,countdown_min,participants])
             print(f"Row writed: {start_m},{countdown_min},{participants}")
             try:
                 mycursor.execute(mysql_insert_query, (start_m,participants,countdown_min))
                 mydb.commit()
             except mysql.connector.Error as e:
                 print(f"Failed to insert to database: {e}")
-                exit()
-
         to_sleep = 1.0+start_s-time()
         sleep(to_sleep) if to_sleep>=0 else print("PROCESS TIME > 1s !!")
-        
-        
+
+finally:
+    mycursor.close()
+    mydb.close()
+    driver.quit()
+    
+    
