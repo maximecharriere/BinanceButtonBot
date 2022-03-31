@@ -15,9 +15,9 @@ CHROMEDRIVER_PATH = "C:/dev/chromedriver_win32/chromedriver.exe"
 URL = "https://www.binance.com/en/activity/bitcoin-button-game"
 
 MYSQL_QUERY = """
-INSERT INTO `binance_btn_stats` (`timestamp`, `participants_tot`, `countdown_min`) 
+INSERT INTO `binance_btn_stats` (`timestamp_unix`, `participants_tot`, `countdown_min`) 
 VALUES 
-(FROM_UNIXTIME(%s), %s, %s);
+(%s, %s, %s);
 """
 
 def main ():
