@@ -2,6 +2,9 @@ from typing import final
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
 from bs4 import BeautifulSoup
 from time import time, sleep
 import mysql.connector
@@ -51,8 +54,9 @@ def main ():
             chrome_options = Options()
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--disable-gpu')
+            s=Service(ChromeDriverManager().install())
             driver = webdriver.Chrome(
-                executable_path=CHROMEDRIVER_PATH,
+                service=s,
                 options=chrome_options)
             # driver = webdriver.Remote("http://localhost:4444/wd/hub", options=chrome_options)
         except WebDriverException as e:
