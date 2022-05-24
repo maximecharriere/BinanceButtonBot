@@ -6,4 +6,4 @@ WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
 
-CMD [ "python", "./BinanceButtonBot.py"]
+CMD [ "python", "./Runner.py"]

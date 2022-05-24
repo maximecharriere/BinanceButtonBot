@@ -91,7 +91,7 @@ def main():
                     mydb.commit()
                 except mysql.connector.Error as e:
                     print(f"{type(e).__name__} : {e}")
-                    return 2
+                    return 13
                 else:
                     print(
                         f"Row writed: {start_m}, {participants}, {countdown_min}")
